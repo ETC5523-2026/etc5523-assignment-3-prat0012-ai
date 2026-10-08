@@ -69,3 +69,28 @@ body {
 #quarto-document-content li a {
   color: var(--accent);
 }
+
+/* 6. About page */
+/* thin navy ring so the white photo background does not blend into the page */
+.quarto-about-jolla .about-image {
+  border: 3px solid var(--navy);
+}
+
+/* keep the name and subtitle centred, but left-align the bio (easier to read).
+   Quarto writes these rules as div.quarto-about-jolla, so we match that. */
+.quarto-about-jolla .quarto-title .subtitle {
+  text-align: center;
+}
+
+div.quarto-about-jolla main {
+  text-align: left;
+}
+
+/* buttons (GitHub, LinkedIn, Email) in the site colours */
+div.quarto-about-jolla .about-link {
+  color: var(--navy);
+}
+
+div.quarto-about-jolla .about-link:hover {
+  color: var(--accent);
+}

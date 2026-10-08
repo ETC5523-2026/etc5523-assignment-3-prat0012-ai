@@ -5,7 +5,8 @@ website:
   title: "Pratyush Kumar"
   navbar:
     right:
-      - about.qmd
+      - href: about.qmd
+        text: About
       - icon: github
         href: https://github.com/prat0012-ai
         aria-label: GitHub profile of Pratyush Kumar
