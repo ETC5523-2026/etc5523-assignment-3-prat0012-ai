@@ -1,0 +1,142 @@
+---
+title: "Germany had fewer hospital infections per patient, but more per person"
+description: "Why a country where hospital patients catch fewer infections can still end up with more infections overall."
+author: "Pratyush Kumar"
+date: "2026-10-13"
+categories: [health, data stories]
+bibliography: references.bib
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+#| label: setup
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+
+# site colours, the same ones used in styles.css
+navy <- "#1b365d"
+paper <- "#faf9f6"
+```
+
+In 2011, German hospital patients caught an infection less often than the European average (2.4 vs 2.8 per 100 patients). Yet Germany had more of these infections per 100,000 people: 592 compared with 468.
+
+Both numbers are true at the same time. The reason has less to do with how clean German hospitals are, and more to do with how many people go into them [@zacher2019].
+
+## Infections caught in hospital are a hidden health problem
+
+Some patients go into hospital for one problem and pick up a new infection while they are there. Doctors call these healthcare-associated infections. Common examples are pneumonia, urinary tract infections and infected surgical wounds. They make patients sicker, keep them in hospital longer, and can be fatal.
+
+Many of these infections can be prevented. Researchers estimate that 20 to 30% of them in Germany could be avoided with better hygiene and hospital procedures [@zacher2019]. Prevention costs staff time and money, so health systems need to know where these infections cause the most harm.
+
+That raises a simple question: does Germany have a bigger or a smaller problem with hospital infections than the rest of Europe? The answer depends on how you count.
+
+## Where the numbers come from
+
+The numbers come from a large European survey. On a single day in 2011 or 2012, hospitals across Europe checked every patient and recorded who had picked up an infection in hospital [@ecdc2013]. Germany's figures come from 46 hospitals and 9,626 patients, and the European average comes from 273,753 patients in 1,149 hospitals.
+
+Zacher et al. [-@zacher2019] used this survey to estimate how many of five common hospital infections happen in a whole year, and how much harm they cause. Because a one-day survey cannot give an exact count, each estimate comes with a likely range.
+
+## German patients caught fewer infections, but Germany had more overall
+
+For each hospital patient, Germany did better than the European average. @fig-rates shows that 2.4 in every 100 German hospital patients caught one of the five infections, compared with 2.8 across Europe.
+
+```{r}
+#| label: fig-rates
+#| fig-cap: "German hospital patients were less likely to catch an infection than the European average (top), but Germany had more infections for its population size (bottom). Dots show the best estimate for 2011 to 2012 and lines show the likely range. Source: Zacher et al. (2019)."
+#| fig-alt: "Two dot charts, one above the other. Top: new infections per 100 hospital patients, Germany 2.4 and European average 2.8. Bottom: new infections per 100,000 people, Germany 592 and European average 468."
+#| fig-width: 7
+#| fig-height: 5
+
+# Estimates from the text and Table 2 of Zacher et al. (2019)
+rates <- tibble::tribble(
+  ~measure,                    ~area,              ~estimate, ~low,  ~high, ~label,
+  "Per 100 hospital patients", "Germany",          2.40,      2.12,  2.70,  "2.4",
+  "Per 100 hospital patients", "European average", 2.83,      2.75,  2.90,  "2.8",
+  "Per 100,000 people",        "Germany",          592.1,     521.7, 665.8, "592",
+  "Per 100,000 people",        "European average", 467.9,     456.2, 480.2, "468"
+)
+
+# put Germany on the top row
+rates$area <- factor(rates$area, levels = c("European average", "Germany"))
+
+ggplot(rates, aes(x = estimate, y = area, colour = area)) +
+  geom_errorbarh(aes(xmin = low, xmax = high), height = 0, linewidth = 1) +
+  geom_point(size = 3.5) +
+  geom_text(aes(label = label), vjust = -1.1, size = 6, fontface = "bold") +
+  facet_wrap(~measure, ncol = 1, scales = "free_x") +
+  expand_limits(x = 0) +
+  scale_colour_manual(values = c("Germany" = navy, "European average" = "grey55")) +
+  labs(x = "New infections per year", y = NULL) +
+  theme_minimal(base_size = 18) +
+  theme(
+    legend.position = "none",
+    panel.grid.minor = element_blank(),
+    panel.grid.major.y = element_blank(),
+    strip.text = element_text(face = "bold", size = 17, hjust = 0),
+    plot.background = element_rect(fill = paper, colour = NA)
+  )
+```
+
+Looking at the whole population flips the result. Germany had 592 of these infections for every 100,000 people, compared with 468 across Europe. The likely ranges in @fig-rates do not overlap, so both differences are clear in the data.
+
+The reason is the number of hospital stays. Germany has the most hospital beds in Europe, and the second highest number of hospital patients per person among 34 wealthy OECD countries [@zacher2019]. A lower risk for each patient, spread across many more patients, adds up to more infections in total. In other words, a "per patient" number tells you about the care inside hospitals, while a "per person" number also reflects how often people end up in hospital.
+
+## Two infections cause half the harm
+
+Counting infections only tells part of the story, because some infections are far more dangerous than others. To compare them fairly, the researchers measured harm in "healthy years lost": years of life lost to early death, plus years lived in poor health. @tbl-harm shows how this changes the picture.
+
+```{r}
+#| label: tbl-harm
+#| tbl-cap: "Pneumonia and bloodstream infections caused over half of the harm, even though urinary tract infections were the most common. Germany, 2011. Shares are out of the five infections combined; cases are rounded to the nearest 100. Source: Zacher et al. (2019), Table 1."
+
+# Yearly estimates for Germany from Table 1 of Zacher et al. (2019)
+harm <- tibble::tribble(
+  ~infection,                    ~cases, ~years_lost,
+  "Pneumonia (lung infection)",  106586, 69508,
+  "Urinary tract infection",     214150, 66701,
+  "Bloodstream infection",       26976,  58350,
+  "Surgical wound infection",    93222,  28842,
+  "C. difficile (gut infection)", 36002, 20890
+)
+
+harm <- harm |>
+  mutate(
+    case_share = cases / sum(cases) * 100,
+    harm_share = years_lost / sum(years_lost) * 100
+  ) |>
+  arrange(desc(harm_share))
+
+# rows to highlight: the two infections that cause the most harm per case
+focus_rows <- which(harm$infection %in% c("Pneumonia (lung infection)", "Bloodstream infection"))
+
+harm |>
+  mutate(
+    cases = scales::comma(round(cases, -2)),
+    case_share = paste0(round(case_share), "%"),
+    harm_share = paste0(round(harm_share), "%")
+  ) |>
+  select(infection, cases, case_share, harm_share) |>
+  kbl(
+    col.names = c("Infection type", "New cases per year", "Share of all cases", "Share of all harm"),
+    align = c("l", "r", "r", "r")
+  ) |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("hover")) |>
+  row_spec(focus_rows, bold = TRUE, color = navy)
+```
+
+Urinary tract infections were the most common type, making up nearly half of all cases, but they caused just over a quarter of the harm because they are rarely fatal. Pneumonia and bloodstream infections were the opposite. Together they made up just over a quarter of cases but more than half of the harm (@tbl-harm). Focusing only on the most common infections would therefore miss some of the most harmful ones.
+
+## Is Germany worse than Europe overall? We can't be sure
+
+When infections are measured by harm rather than by count, the gap between Germany and Europe becomes unclear. Germany lost an estimated 308 healthy years per 100,000 people, compared with 290 for Europe. However, the likely ranges overlap heavily (221 to 416 for Germany, and 215 to 377 for Europe), so the true gap could be bigger, smaller or even the other way around [@zacher2019]. The data are also from 2011, and German hospitals may have changed since then.
+
+## What this means
+
+So, does Germany have a bigger or a smaller problem than the rest of Europe? For each patient, the problem is smaller: German patients were less likely to catch an infection in hospital. Across the whole population, Germany had more infections, because far more people pass through its hospitals. Whether that adds up to more overall harm is still uncertain.
+
+The authors suggest that cutting avoidable hospital stays, alongside good hygiene, could reduce the number of hospital infections in Germany [@zacher2019]. The wider lesson applies to any health statistic you read: check whether a number is "per patient" or "per person", because the two can point in opposite directions.

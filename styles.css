@@ -94,3 +94,8 @@ div.quarto-about-jolla .about-link {
 div.quarto-about-jolla .about-link:hover {
   color: var(--accent);
 }
+
+/* 7. Reference list at the bottom of posts: same background as the page */
+#quarto-appendix.default {
+  background-color: var(--paper);
+}
