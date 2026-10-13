@@ -1,13 +1,24 @@
 ---
-title: "About"
+title: "Pratyush Kumar"
+subtitle: "Master of Business Analytics student, Monash University"
 image: profile.jpg
+image-alt: "Photo of Pratyush Kumar"
 about:
   template: jolla
   links:
     - icon: github
-      text: Github
-      href: https://github.com/etc5523-2022
-
+      text: GitHub
+      href: https://github.com/prat0012-ai
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/pratyush-kumar-02115a18b/
+    - icon: envelope
+      text: Email
+      href: mailto:pratyushkumar711@gmail.com
 ---
 
-This is a blog template for the ETC5523 Communicating with Data assessment at Monash University.
+Hi, I'm Pratyush. I'm studying a Master of Business Analytics at Monash University in Melbourne.
+
+Before Monash, I worked as an Operations Manager in my family's business in India. I also have a Bachelor of Business Administration in Finance and Accounting, and I have passed nine ACCA papers.
+
+On this blog, I take research findings and explain them in plain language, with charts that get straight to the point. I'm interested in Business Analyst and BI Analyst roles.

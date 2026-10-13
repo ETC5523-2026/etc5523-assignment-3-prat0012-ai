@@ -1,13 +1,17 @@
 project:
   type: website
+  output-dir: docs
 
 website:
-  title: "blog-template"
+  title: "Pratyush Kumar"
+  site-url: "https://etc5523-2026.github.io/etc5523-assignment-3-prat0012-ai/"
   navbar:
     right:
-      - about.qmd
+      - href: about.qmd
+        text: About
       - icon: github
-        href: https://github.com/etc5523-2022
+        href: https://github.com/prat0012-ai
+        aria-label: GitHub profile of Pratyush Kumar
 format:
   html:
     theme: cosmo

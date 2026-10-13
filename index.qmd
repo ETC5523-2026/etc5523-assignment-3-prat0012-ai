@@ -1,5 +1,6 @@
 ---
-title: "ETC5523 Blog Assessment"
+title: "Data Stories"
+subtitle: "Making research findings easy to understand"
 listing:
   contents: posts
   sort: "date desc"

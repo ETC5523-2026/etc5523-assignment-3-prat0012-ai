@@ -1,4 +1,107 @@
-/* css styles */
-.navbar-dark, .quarto-title-banner {
-  background-color: #006DAE;
+/* ============================================================
+   Site theme for Pratyush Kumar's blog
+   Colours are named once here, then reused below (Week 7).
+   ============================================================ */
+:root {
+  --ink: #1f2933;        /* main text: dark grey, easy to read */
+  --paper: #faf9f6;      /* page background: soft off-white */
+  --navy: #1b365d;       /* banner and headings */
+  --accent: #0e7c7b;     /* links: teal */
+  --line: #e3e1dc;       /* thin divider lines */
+}
+
+/* 1. Page background and body text */
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  line-height: 1.65;
+}
+
+/* 2. Top navigation bar: same off-white, with a thin line underneath */
+.navbar {
+  background-color: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+
+.navbar .navbar-title,
+.navbar .nav-link {
+  color: var(--navy);
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+  color: var(--accent);
+}
+
+/* 3. Title banner: navy background with white text (was grey on blue) */
+.quarto-title-banner {
+  background-color: var(--navy);
+  color: #ffffff;
+}
+
+.quarto-title-banner h1,
+.quarto-title-banner .subtitle,
+.quarto-title-banner a {
+  color: #ffffff;
+}
+
+/* category tags inside the banner, e.g. "HEALTH" */
+.quarto-title .quarto-categories .quarto-category {
+  color: #ffffff;
+  opacity: 0.9;
+}
+
+/* 4. Headings inside the page content */
+#quarto-document-content h2,
+#quarto-document-content h3,
+.quarto-about-jolla h1 {
+  color: var(--navy);
+}
+
+/* post titles on the home page list */
+.quarto-listing .listing-title a {
+  color: var(--navy);
+}
+
+/* 5. Links inside paragraphs and lists only
+   (so the home page post list stays calm) */
+#quarto-document-content p a,
+#quarto-document-content li a {
+  color: var(--accent);
+}
+
+/* 6. About page */
+/* thin navy ring so the white photo background does not blend into the page */
+.quarto-about-jolla .about-image {
+  border: 3px solid var(--navy);
+}
+
+/* keep the name and subtitle centred, but left-align the bio (easier to read).
+   Quarto writes these rules as div.quarto-about-jolla, so we match that. */
+.quarto-about-jolla .quarto-title .subtitle {
+  text-align: center;
+}
+
+div.quarto-about-jolla main {
+  text-align: left;
+}
+
+/* buttons (GitHub, LinkedIn, Email) in the site colours */
+div.quarto-about-jolla .about-link {
+  color: var(--navy);
+}
+
+div.quarto-about-jolla .about-link:hover {
+  color: var(--accent);
+}
+
+/* 7. Reference list at the bottom of posts: same background as the page */
+#quarto-appendix.default {
+  background-color: var(--paper);
+}
+
+/* 8. Breathing space above and below figures and tables in posts */
+#quarto-document-content .quarto-float {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
