@@ -1,5 +1,5 @@
 ---
-title: "Germany had fewer hospital infections per patient, but more per person"
+title: "In 2011, Germany had fewer hospital infections per patient, but more per person"
 description: "Why a country where hospital patients catch fewer infections can still end up with more infections overall."
 author: "Pratyush Kumar"
 date: "2026-10-13"
@@ -47,42 +47,51 @@ For each hospital patient, Germany did better than the European average. @fig-ra
 
 ```{r}
 #| label: fig-rates
-#| fig-cap: "German hospital patients were less likely to catch an infection than the European average (top), but Germany had more infections for its population size (bottom). Dots show the best estimate for 2011 to 2012 and lines show the likely range. Source: Zacher et al. (2019)."
-#| fig-alt: "Two dot charts, one above the other. Top: new infections per 100 hospital patients, Germany 2.4 and European average 2.8. Bottom: new infections per 100,000 people, Germany 592 and European average 468."
+#| fig-cap: "New cases of five common hospital infections per year, Germany compared with the European average, 2011 to 2012. Bars show the best estimates. The likely ranges around them do not overlap in either chart, so both differences are clear. Source: Zacher et al. (2019)."
+#| fig-alt: "Two bar charts. Top: infections per 100 hospital patients, Germany 2.4 and European average 2.8. Bottom: infections per 100,000 people, Germany 592 and European average 468."
 #| fig-width: 7
-#| fig-height: 5
+#| fig-height: 3.6
 
-# Estimates from the text and Table 2 of Zacher et al. (2019)
+# Best estimates from the text and Table 2 of Zacher et al. (2019)
 rates <- tibble::tribble(
-  ~measure,                    ~area,              ~estimate, ~low,  ~high, ~label,
-  "Per 100 hospital patients", "Germany",          2.40,      2.12,  2.70,  "2.4",
-  "Per 100 hospital patients", "European average", 2.83,      2.75,  2.90,  "2.8",
-  "Per 100,000 people",        "Germany",          592.1,     521.7, 665.8, "592",
-  "Per 100,000 people",        "European average", 467.9,     456.2, 480.2, "468"
+  ~measure,                                ~area,              ~estimate, ~label,
+  "Infections per 100 hospital patients", "Germany",          2.40,      "2.4",
+  "Infections per 100 hospital patients", "European average", 2.83,      "2.8",
+  "Infections per 100,000 people",        "Germany",          592.1,     "592",
+  "Infections per 100,000 people",        "European average", 467.9,     "468"
 )
 
-# put Germany on the top row
+# put Germany on the top row of each chart
 rates$area <- factor(rates$area, levels = c("European average", "Germany"))
 
-ggplot(rates, aes(x = estimate, y = area, colour = area)) +
-  geom_errorbarh(aes(xmin = low, xmax = high), height = 0, linewidth = 1) +
-  geom_point(size = 3.5) +
-  geom_text(aes(label = label), vjust = -1.1, size = 6, fontface = "bold") +
+ggplot(rates, aes(x = estimate, y = area, fill = area)) +
+  geom_col(width = 0.65) +
+  # write the number at the end of each bar, so no axis is needed
+  geom_text(aes(label = label, colour = area), hjust = -0.2, size = 5, fontface = "bold") +
   facet_wrap(~measure, ncol = 1, scales = "free_x") +
-  expand_limits(x = 0) +
-  scale_colour_manual(values = c("Germany" = navy, "European average" = "grey55")) +
-  labs(x = "New infections per year", y = NULL) +
-  theme_minimal(base_size = 18) +
+  scale_fill_manual(values = c("Germany" = navy, "European average" = "grey70")) +
+  scale_colour_manual(values = c("Germany" = navy, "European average" = "grey40")) +
+  # leave room on the right for the labels
+  scale_x_continuous(expand = expansion(mult = c(0, 0.15))) +
+  labs(
+    title = "Fewer infections per patient, but more per person",
+    x = NULL, y = NULL
+  ) +
+  theme_minimal(base_size = 14) +
   theme(
     legend.position = "none",
-    panel.grid.minor = element_blank(),
-    panel.grid.major.y = element_blank(),
-    strip.text = element_text(face = "bold", size = 17, hjust = 0),
+    panel.grid = element_blank(),
+    axis.text.x = element_blank(),
+    axis.text.y = element_text(size = 13, colour = "grey20"),
+    strip.text = element_text(face = "bold", size = 12, hjust = 0, colour = "grey30"),
+    plot.title = element_text(face = "bold", colour = navy, size = 15),
+    plot.title.position = "plot",
+    plot.margin = margin(10, 10, 15, 10),
     plot.background = element_rect(fill = paper, colour = NA)
   )
 ```
 
-Looking at the whole population flips the result. Germany had 592 of these infections for every 100,000 people, compared with 468 across Europe. The likely ranges in @fig-rates do not overlap, so both differences are clear in the data.
+Looking at the whole population flips the result. Germany had 592 of these infections for every 100,000 people, compared with 468 across Europe. As @fig-rates notes, the likely ranges around these numbers do not overlap, so both differences are clear in the data.
 
 The reason is the number of hospital stays. Germany has the most hospital beds in Europe, and the second highest number of hospital patients per person among 34 wealthy OECD countries [@zacher2019]. A lower risk for each patient, spread across many more patients, adds up to more infections in total. In other words, a "per patient" number tells you about the care inside hospitals, while a "per person" number also reflects how often people end up in hospital.
 

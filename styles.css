@@ -99,3 +99,9 @@ div.quarto-about-jolla .about-link:hover {
 #quarto-appendix.default {
   background-color: var(--paper);
 }
+
+/* 8. Breathing space above and below figures and tables in posts */
+#quarto-document-content .quarto-float {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
